@@ -1,0 +1,19 @@
+== ABOUT ==
+
+Freeze is a plugin those just prevent one or more player to move. It can be useful sometimes so i've decided to share it.
+
+I hope you'll enjoy it !
+
+(This command can be also found in the plugin AdminCmd. Thanks for the idea.)
+
+== COMMANDS ==
+
+/freeze <player>
+
+Freeze <player>. If you enter just some characters of the player name, all the players who have those characters in their name will be freezed.
+
+== PERMISSIONS ==
+
+freeze.freeze
+
+Be able to use /freeze command. Default enabled for ops.
