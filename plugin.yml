@@ -1,0 +1,15 @@
+name: Freeze
+version: 1.0.0
+description: Freeze players.
+author: aurel2108
+website: http://aurel2108.eu
+main: me.aurel2108.freeze.Freeze
+commands:
+ freeze:
+  description: Freeze or unfreeze a player.
+  usage: Correct usage is /freeze <player name>
+  permission: freeze.freeze
+permissions:
+ freeze.freeze:
+  description: Be able to freeze players.
+  default:op
