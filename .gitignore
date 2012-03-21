@@ -1,0 +1,4 @@
+# compiled classes #
+# These don't need to be in git
+bin/
+*.class
