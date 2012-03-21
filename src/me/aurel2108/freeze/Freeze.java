@@ -18,8 +18,8 @@ public class Freeze extends JavaPlugin {
 	private FreezePlayerListener playerListener = new FreezePlayerListener();
 	
 	public void onEnable(){
-		log.info("Freeze enabled.");
 		PluginManager pm = getServer().getPluginManager();
+		log.info("Freeze version "+ this.getDescription().getVersion() +" enabled.");
 
         pm.registerEvents(playerListener, this);
 	}
@@ -37,7 +37,8 @@ public class Freeze extends JavaPlugin {
 				{
 					for(Player p : Bukkit.getOnlinePlayers())
 					{
-						if(p.getName().toLowerCase().contains(i.toLowerCase()) || p.getName().equalsIgnoreCase(i))
+						//if arg is set to * we want to freeze everyone, but not ourselves of course.
+						if( ( i.toLowerCase() == "*" && i.toLowerCase() != player.getName().toLowerCase() ) || p.getName().toLowerCase().contains(i.toLowerCase()) || p.getName().equalsIgnoreCase(i))
 						{
 							if(toFreeze.size() == 0 || toFreeze.contains(p))
 							{
@@ -63,7 +64,7 @@ public class Freeze extends JavaPlugin {
 	
 
 	public void onDisable(){
-		log.info("Freeze disabled.");
+		log.info("Freeze version v"+ this.getDescription().getVersion() +" disabled.");
 	}
 
 }
