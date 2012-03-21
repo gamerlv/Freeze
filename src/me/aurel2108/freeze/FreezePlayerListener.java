@@ -40,6 +40,7 @@ public class FreezePlayerListener implements Listener {
 	@EventHandler
 	public void onBlockIgnite(BlockIgniteEvent event)
 	{
+		if ( event.getPlayer() == null ) return; //if the fire was already in the world or was placed by the server (fireSpread) this is null
 		if(Freeze.toFreeze.contains(event.getPlayer().getName()))
 		{
 			event.setCancelled(true);
