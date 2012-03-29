@@ -12,8 +12,16 @@ I hope you'll enjoy it !
 
 Freeze <player>. If you enter just some characters of the player name, all the players who have those characters in their name will be freezed.
 
+/freezeall
+
+Freeze every players.
+
 == PERMISSIONS ==
 
 freeze.freeze
 
 Be able to use /freeze command. Default enabled for ops.
+
+freeze.freezeall
+
+Be able to use /freezeall command. Default enabled for ops.

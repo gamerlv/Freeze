@@ -13,7 +13,11 @@ public class FreezePlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event)
 	{
-		if(Freeze.toFreeze.contains(event.getPlayer().getName()))
+		if(Freeze.toFreeze.contains(event.getPlayer().getName()) && (event.getPlayer().hasPermission("freeze.never") == false || event.getPlayer().isOp() == false))
+		{
+			event.setTo(event.getFrom());
+		}
+		else if(Freeze.freezeAll == true && (event.getPlayer().hasPermission("freeze.never") == false || event.getPlayer().isOp() == false))
 		{
 			event.setTo(event.getFrom());
 		}
@@ -22,7 +26,11 @@ public class FreezePlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
-		if(Freeze.toFreeze.contains(event.getPlayer().getName()))
+		if(Freeze.toFreeze.contains(event.getPlayer().getName()) && (event.getPlayer().hasPermission("freeze.never") == false || event.getPlayer().isOp() == false))
+		{
+			event.setCancelled(true);
+		}
+		else if(Freeze.freezeAll == true && (event.getPlayer().hasPermission("freeze.never") == false || event.getPlayer().isOp() == false))
 		{
 			event.setCancelled(true);
 		}
@@ -31,7 +39,11 @@ public class FreezePlayerListener implements Listener {
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event)
 	{
-		if(Freeze.toFreeze.contains(event.getPlayer().getName()))
+		if(Freeze.toFreeze.contains(event.getPlayer().getName()) && (event.getPlayer().hasPermission("freeze.never") == false || event.getPlayer().isOp() == false))
+		{
+			event.setCancelled(true);
+		}
+		else if(Freeze.freezeAll == true && (event.getPlayer().hasPermission("freeze.never") == false || event.getPlayer().isOp() == false))
 		{
 			event.setCancelled(true);
 		}
@@ -40,7 +52,11 @@ public class FreezePlayerListener implements Listener {
 	@EventHandler
 	public void onBlockIgnite(BlockIgniteEvent event)
 	{
-		if(Freeze.toFreeze.contains(event.getPlayer().getName()))
+		if(Freeze.toFreeze.contains(event.getPlayer().getName()) && (event.getPlayer().hasPermission("freeze.never") == false || event.getPlayer().isOp() == false))
+		{
+			event.setCancelled(true);
+		}
+		else if(Freeze.freezeAll == true && (event.getPlayer().hasPermission("freeze.never") == false || event.getPlayer().isOp() == false))
 		{
 			event.setCancelled(true);
 		}
@@ -49,7 +65,11 @@ public class FreezePlayerListener implements Listener {
 	@EventHandler	
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
-		if(Freeze.toFreeze.contains(event.getPlayer().getName()))
+		if(Freeze.toFreeze.contains(event.getPlayer().getName()) && (event.getPlayer().hasPermission("freeze.never") == false || event.getPlayer().isOp() == false))
+		{
+			event.setCancelled(true);
+		}
+		else if(Freeze.freezeAll == true && (event.getPlayer().hasPermission("freeze.never") == false || event.getPlayer().isOp() == false))
 		{
 			event.setCancelled(true);
 		}

@@ -1,5 +1,5 @@
 name: Freeze
-version: 1.0.0
+version: 1.1.0
 description: Freeze players.
 author: aurel2108
 website: http://aurel2108.eu
@@ -9,7 +9,14 @@ commands:
   description: Freeze or unfreeze a player.
   usage: Correct usage is /freeze <player name>
   permission: freeze.freeze
+ freezeall:
+  description: Freeze or unfreeze every players.
+  usage: Correct usage is /freezeall
+  permission: freeze.freezeall
 permissions:
  freeze.freeze:
   description: Be able to freeze players.
-  default:op
+  default: op
+ freeze.freezeall:
+  description: Be able to freeze every players.
+  default: op
