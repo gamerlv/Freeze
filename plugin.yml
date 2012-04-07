@@ -13,10 +13,26 @@ commands:
   description: Freeze or unfreeze every players.
   usage: Correct usage is /freezeall
   permission: freeze.freezeall
+ unfreezeall:
+  description: Freeze or unfreeze every players.
+  usage: Correct usage is /freezeall
+  permission: freeze.freezeall
 permissions:
+ freeze.*:
+  description: Be able to use all commands.
+  children:
+    freeze.freeze: true
+    freeze.freezeall: true
+    freeze.unfreezeall: true
  freeze.freeze:
   description: Be able to freeze players.
   default: op
  freeze.freezeall:
   description: Be able to freeze every players.
+  default: op
+ freeze.unfreezeall:
+  description: Be able to unfreeze every players.
+  default: op
+ freeze.never:
+  description: Never be freezed.
   default: op

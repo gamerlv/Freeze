@@ -13,14 +13,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Freeze extends JavaPlugin {
 	
-	Logger log = Logger.getLogger("Minecraft");
+	public static Logger log = Logger.getLogger("Minecraft");
 	public static ArrayList<String> toFreeze = new ArrayList<String>();
 	public static boolean freezeAll = false;
-	PluginDescriptionFile pdfFile = this.getDescription();
-	
+	PluginDescriptionFile pdfFile;
 	private FreezePlayerListener playerListener = new FreezePlayerListener();
 	
 	public void onEnable(){
+		pdfFile = this.getDescription();
 		log.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " enabled.");
 		PluginManager pm = getServer().getPluginManager();
 
@@ -67,15 +67,27 @@ public class Freeze extends JavaPlugin {
 			{
 				if(freezeAll)
 				{
-					freezeAll = true;
-					player.sendMessage("All players are now freezed.");
-				}
-				else
-				{
 					freezeAll = false;
 					player.sendMessage("All players are now unfreezed.");
 				}
+				else
+				{
+					freezeAll = true;
+					player.sendMessage("All players are now freezed.");
+				}
 			}
+			return true;
+		}
+		
+		if(command.getName().equalsIgnoreCase("unfreezeall"))
+		{
+			if(player.isOp() || player.hasPermission("freeze.unfreezeall"))
+			{
+				freezeAll = false;
+				toFreeze.clear();
+				player.sendMessage("All players are now unfreezed.");
+			}
+			return true;
 		}
 		return false;
 	}

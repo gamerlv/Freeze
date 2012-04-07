@@ -6,6 +6,8 @@ I hope you'll enjoy it !
 
 (This command can be also found in the plugin AdminCmd. Thanks for the idea.)
 
+Last version : 1.1.0
+
 == COMMANDS ==
 
 /freeze <player>
@@ -16,7 +18,15 @@ Freeze <player>. If you enter just some characters of the player name, all the p
 
 Freeze every players.
 
+/unfreezeall
+
+Unfreeze every players.
+
 == PERMISSIONS ==
+
+freeze.*
+
+Give permissions for /freeze, /freezeall and /unfreezeall.
 
 freeze.freeze
 
@@ -25,3 +35,22 @@ Be able to use /freeze command. Default enabled for ops.
 freeze.freezeall
 
 Be able to use /freezeall command. Default enabled for ops.
+
+freeze.unfreezeall
+
+Be able to use /unfreezeall command. Default enabled for ops.
+
+freeze.never
+
+Never be freezed by anyone. Default enabled for ops.
+
+== CHANGELOG ==
+
+1.0.0
+
+First release.
+
+1.1.0
+
+Add /freezeall and /unfreezeall commands.
+Add freeze.never permission.
