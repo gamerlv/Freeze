@@ -6,7 +6,7 @@ I hope you'll enjoy it !
 
 (This command can be also found in the plugin AdminCmd. Thanks for the idea.)
 
-Last version : 1.1.0
+Last version : 1.1.1
 
 == COMMANDS ==
 
@@ -54,3 +54,7 @@ First release.
 
 Add /freezeall and /unfreezeall commands.
 Add freeze.never permission.
+
+1.1.1
+
+Bug with BlockIgniteEvent fixed.

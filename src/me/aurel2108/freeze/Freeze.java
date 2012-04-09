@@ -91,11 +91,8 @@ public class Freeze extends JavaPlugin {
 		}
 		return false;
 	}
- 
-	
 
 	public void onDisable(){
 		log.info(pdfFile.getName() + " disabled.");
 	}
-
 }
