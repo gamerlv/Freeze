@@ -6,7 +6,7 @@ I hope you'll enjoy it !
 
 (This command can be also found in the plugin AdminCmd. Thanks for the idea.)
 
-Last version : 1.1.1
+Last version : 1.2.0
 
 == COMMANDS ==
 
@@ -58,3 +58,7 @@ Add freeze.never permission.
 1.1.1
 
 Bug with BlockIgniteEvent fixed.
+
+1.2.0
+
+Add options for let (or not) people who are freezed use commands or speak in the global chat.

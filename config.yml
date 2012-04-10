@@ -1,0 +1,6 @@
+# If you let commands to true, freezed users can use commands (that not teleport and move them) like /m
+# But if you set it to false, they can't use ANY command
+# If you let speak to true, freezed users can speak in the global chat
+# But if you set it to false, they can't speak
+commands: true
+speak: true

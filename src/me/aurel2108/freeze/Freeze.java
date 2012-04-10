@@ -1,11 +1,18 @@
 package me.aurel2108.freeze;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -19,8 +26,30 @@ public class Freeze extends JavaPlugin {
 	PluginDescriptionFile pdfFile;
 	private FreezePlayerListener playerListener = new FreezePlayerListener();
 	
+	File configFile;
+	public static FileConfiguration config;
+	
 	public void onEnable(){
+		
 		pdfFile = this.getDescription();
+		if(!(new File("plugins/" + pdfFile.getName()).exists()))
+			new File("plugins/" + pdfFile.getName()).mkdir();
+		
+		configFile = new File("plugins/" + pdfFile.getName() + "/config.yml");
+		config = new YamlConfiguration();
+		
+		if(!configFile.exists()){
+	        configFile.getParentFile().mkdirs();
+	        copy(getResource("config.yml"), configFile);
+	    }
+		
+		try {
+			config.load(configFile);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		log.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " enabled.");
 		PluginManager pm = getServer().getPluginManager();
 
@@ -89,10 +118,34 @@ public class Freeze extends JavaPlugin {
 			}
 			return true;
 		}
+		
 		return false;
 	}
 
 	public void onDisable(){
+		
+		try {
+			config.save(configFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		log.info(pdfFile.getName() + " disabled.");
+	}
+	
+	private void copy(InputStream in, File file) {
+	    try {
+	        OutputStream out = new FileOutputStream(file);
+	        byte[] buf = new byte[1024];
+	        int len;
+	        while((len=in.read(buf))>0){
+	            out.write(buf,0,len);
+	        }
+	        out.close();
+	        in.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 }
