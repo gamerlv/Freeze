@@ -6,13 +6,17 @@ I hope you'll enjoy it !
 
 (This command can be also found in the plugin AdminCmd. Thanks for the idea.)
 
-Last version : 1.2.0
+Last version : 1.3.0
 
 == COMMANDS ==
 
 /freeze <player>
 
 Freeze <player>. If you enter just some characters of the player name, all the players who have those characters in their name will be freezed.
+
+/tmpfreeze <player> <seconds>
+
+Temporarily freeze <player> for <seconds> seconds. If you enter just some characters of the player name, all the players who have those characters in their name will be freezed.
 
 /freezeall
 
@@ -31,6 +35,10 @@ Give permissions for /freeze, /freezeall and /unfreezeall.
 freeze.freeze
 
 Be able to use /freeze command. Default enabled for ops.
+
+freeze.tmpfreeze
+
+Be able to use /tmpfreeze command. Default enabled for ops.
 
 freeze.freezeall
 
@@ -62,3 +70,8 @@ Bug with BlockIgniteEvent fixed.
 1.2.0
 
 Add options for let (or not) people who are freezed use commands or speak in the global chat.
+
+1.3.0
+
+Add option for let (or not) freezed players freezed when the server reboots.
+Add /tmpfreeze command for temporarily freeze players.

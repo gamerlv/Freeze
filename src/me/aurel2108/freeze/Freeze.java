@@ -1,11 +1,17 @@
 package me.aurel2108.freeze;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -22,6 +28,7 @@ public class Freeze extends JavaPlugin {
 	
 	public static Logger log = Logger.getLogger("Minecraft");
 	public static ArrayList<String> toFreeze = new ArrayList<String>();
+	public static ArrayList<String> toTmpFreeze = new ArrayList<String>();
 	public static boolean freezeAll = false;
 	PluginDescriptionFile pdfFile;
 	private FreezePlayerListener playerListener = new FreezePlayerListener();
@@ -50,6 +57,28 @@ public class Freeze extends JavaPlugin {
 			e.printStackTrace();
 		}
 		
+		if(config.getBoolean("save"))
+		{
+			File saveFile = new File("plugins/" + pdfFile.getName() + "/freezedPlayers.txt");
+			if(saveFile.exists())
+			{
+				try {
+					InputStream ips = new FileInputStream(saveFile);
+					InputStreamReader ipsr = new InputStreamReader(ips);
+					BufferedReader br = new BufferedReader(ipsr);
+					
+					String line = null;
+					
+					while((line = br.readLine()) != null)
+					{
+						toFreeze.add(line.trim());
+					}
+				} catch (Exception e) {
+					System.out.println("Error : " + e.toString());
+				}
+			}
+		}
+		
 		log.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " enabled.");
 		PluginManager pm = getServer().getPluginManager();
 
@@ -71,12 +100,12 @@ public class Freeze extends JavaPlugin {
 					{
 						if(p.getName().toLowerCase().contains(i.toLowerCase()) || p.getName().equalsIgnoreCase(i))
 						{
-							if(toFreeze.size() == 0 || toFreeze.contains(p))
+							if(toFreeze.size() == 0 || !toFreeze.contains(p.getName()))
 							{
 								toFreeze.add(p.getName());
 								player.sendMessage(p.getName() + " freezed.");
 							}
-							else
+							else if(toFreeze.size() > 0 && toFreeze.contains(p.getName()))
 							{
 								toFreeze.remove(p.getName());
 								player.sendMessage(p.getName() + " unfreezed.");
@@ -88,6 +117,41 @@ public class Freeze extends JavaPlugin {
 			}
 			else
 				player.sendMessage("Usage : /freeze <player name>"); return false;
+		}
+		
+		if (command.getName().equalsIgnoreCase("tmpfreeze") && (player.isOp() || player.hasPermission("freeze.tmpfreeze"))) {
+			if(args.length > 1)
+			{
+				for(final Player p : Bukkit.getOnlinePlayers())
+				{
+					if(p.getName().toLowerCase().contains(args[0].toLowerCase()) || p.getName().equalsIgnoreCase(args[0]))
+					{
+						if(Integer.parseInt(args[1]) > 0)
+						{
+							if(toFreeze.size() == 0 || !toFreeze.contains(p.getName()))
+							{
+								p.sendMessage("You are now freezed for " + Integer.parseInt(args[1]) + " seconds.");
+								player.sendMessage("You have freeze " + p.getName() + " for " + Integer.parseInt(args[1]) + " seconds.");
+								toFreeze.add(p.getName());
+								toTmpFreeze.add(p.getName());
+								Timer timer = new Timer();
+							    timer.schedule (new TimerTask() {
+							            public void run()
+							            {
+							                toFreeze.remove(p.getName());
+							                toTmpFreeze.remove(p.getName());
+							                this.cancel();
+							                p.sendMessage("You are now unfreezed after " + scheduledExecutionTime() / 1000 + " seconds.");
+							            }
+							    }, ((Integer.parseInt(args[1])) * 1000));
+							}
+						}
+					}
+				}
+				return true;
+			}
+			else
+				return false;
 		}
 		
 		if(command.getName().equalsIgnoreCase("freezeall"))
@@ -124,12 +188,33 @@ public class Freeze extends JavaPlugin {
 
 	public void onDisable(){
 		
-		try {
+		if(config.getBoolean("save"))
+		{
+			File saveFile = new File("plugins/" + pdfFile.getName() + "/freezedPlayers.txt");
+			if(saveFile.exists())
+				saveFile.delete();
+			
+			try {
+				BufferedWriter out = new BufferedWriter(new FileWriter(saveFile));
+					
+				for(String freezedPlayer : toFreeze)
+				{
+					if(!toTmpFreeze.contains(freezedPlayer))
+						out.write(freezedPlayer + "\n");
+				}
+				
+				out.close();
+			} catch (Exception e) {
+				System.out.println("Error : " + e.toString());
+			}
+		}
+		
+		/*try {
 			config.save(configFile);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		log.info(pdfFile.getName() + " disabled.");
 	}

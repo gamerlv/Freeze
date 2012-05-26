@@ -2,5 +2,8 @@
 # But if you set it to false, they can't use ANY command
 # If you let speak to true, freezed users can speak in the global chat
 # But if you set it to false, they can't speak
+# If you let save to true, a list of freezed users will be saved at the server shutdown in Freeze folder for restore the freezed players list when it restarts.
+# But if you set it to false, when your server will reboot, all the players freezed will be unfreezed.
 commands: true
 speak: true
+save: true

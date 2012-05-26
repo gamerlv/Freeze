@@ -1,5 +1,5 @@
 name: Freeze
-version: 1.2.0
+version: 1.3.0
 description: Freeze players.
 author: aurel2108
 website: http://aurel2108.eu
@@ -9,6 +9,10 @@ commands:
   description: Freeze or unfreeze a player.
   usage: Correct usage is /freeze <player name>
   permission: freeze.freeze
+ tmpfreeze:
+  description: Temporarily freeze a player.
+  usage: Correct usage is /tmpfreeze <player name> <seconds>
+  permission: freeze.tmpfreeze
  freezeall:
   description: Freeze or unfreeze every players.
   usage: Correct usage is /freezeall
@@ -24,8 +28,12 @@ permissions:
     freeze.freeze: true
     freeze.freezeall: true
     freeze.unfreezeall: true
+    freeze.tmpfreeze: true
  freeze.freeze:
   description: Be able to freeze players.
+  default: op
+ freeze.tmpfreeze:
+  description: Be able to temporarily freeze players.
   default: op
  freeze.freezeall:
   description: Be able to freeze every players.
