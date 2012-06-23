@@ -1,9 +1,19 @@
 # If you let commands to true, freezed users can use commands (that not teleport and move them) like /m
 # But if you set it to false, they can't use ANY command
+#
 # If you let speak to true, freezed users can speak in the global chat
 # But if you set it to false, they can't speak
+#
 # If you let save to true, a list of freezed users will be saved at the server shutdown in Freeze folder for restore the freezed players list when it restarts.
 # But if you set it to false, when your server will reboot, all the players freezed will be unfreezed.
+#
+# If you let message to true, a message will be displayed to the player when he's freezed, tmpfreeze, unfreezed or to all players who are freezed when you use /freezeall
+# But if you set it to false, nothing will be displayed to them
+#
+# If you let damage to true, freezed players can take damages like any player
+# But if you set it to false, freezed players will not take any damage
 commands: true
 speak: true
 save: true
+message: false
+damage: false

@@ -6,7 +6,7 @@ I hope you'll enjoy it !
 
 (This command can be also found in the plugin AdminCmd. Thanks for the idea.)
 
-Last version : 1.3.0
+Last version : 1.4.0
 
 == COMMANDS ==
 
@@ -14,23 +14,32 @@ Last version : 1.3.0
 
 Freeze <player>. If you enter just some characters of the player name, all the players who have those characters in their name will be freezed.
 
-/tmpfreeze <player> <seconds>
+/tmpfreeze <player> <time>
 
-Temporarily freeze <player> for <seconds> seconds. If you enter just some characters of the player name, all the players who have those characters in their name will be freezed.
+Temporarily freeze <player> for <time>. If you enter just some characters of the player name, all the players who have those characters in their name will be freezed.
+<time> can be an amount of seconds or time amount using "like-Essentials" time format (3d4h5m3s for 3 days 4 hours 5 minutes and 3 seconds)
 
-/freezeall
+/freezeall [world]
 
-Freeze every players.
+Freeze every players. [world] is optional but if you define it, only the players in [world] will be freezed. 
 
 /unfreezeall
 
 Unfreeze every players.
 
+/rldfreeze
+
+Reload the plugin and it's config.
+
+/freezelist
+
+List all freezed players and temporarily freezed players.
+
 == PERMISSIONS ==
 
 freeze.*
 
-Give permissions for /freeze, /freezeall and /unfreezeall.
+Give permissions for /freeze, /freezeall, /unfreezeall, /freezelist and /rldfreeze.
 
 freeze.freeze
 
@@ -48,9 +57,21 @@ freeze.unfreezeall
 
 Be able to use /unfreezeall command. Default enabled for ops.
 
+freeze.reload
+
+Be able to use /rldfreeze command. Default enabled for ops.
+
+freeze.list
+
+Be able to use /freezelist command. Default enabled for ops.
+
 freeze.never
 
 Never be freezed by anyone. Default enabled for ops.
+
+== TWITTER ==
+
+You can follow the twitter account of the plugin for see all news about the development (in real time) and more : @FreezeBukkit.
 
 == CHANGELOG ==
 
@@ -75,3 +96,13 @@ Add options for let (or not) people who are freezed use commands or speak in the
 
 Add option for let (or not) freezed players freezed when the server reboots.
 Add /tmpfreeze command for temporarily freeze players.
+
+1.4.0
+
+Lots of changes in code. (Thanks a lot to aumgn for his help !)
+Add /rldfreeze command and world argument in /freezeall command.
+Add /freezelist command.
+Add message option.
+Seconds arguments for /tmpfreeze can now be seconds or "like-Essentials" time format (3d4h5m3s for 3 days 4 hours 5 minutes and 3 seconds)
+Temporarily freeze time is also save with freezed players when the server reboot or is reloaded. (when save option is enabled)
+Bug fixed when you give freeze.tmpfreeze node without freeze.freeze node.

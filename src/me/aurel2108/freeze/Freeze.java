@@ -4,199 +4,239 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Freeze extends JavaPlugin {
 	
-	public static Logger log = Logger.getLogger("Minecraft");
-	public static ArrayList<String> toFreeze = new ArrayList<String>();
-	public static ArrayList<String> toTmpFreeze = new ArrayList<String>();
-	public static boolean freezeAll = false;
-	PluginDescriptionFile pdfFile;
-	private FreezePlayerListener playerListener = new FreezePlayerListener();
+	Logger log;
+	private Set<String> toFreeze = new HashSet<String>();
+	private ArrayList<String[]> toTmpFreeze = new ArrayList<String[]>();
+	private Set<String> freezeAll = new HashSet<String>();
 	
 	File configFile;
-	public static FileConfiguration config;
 	
 	public void onEnable(){
 		
-		pdfFile = this.getDescription();
-		if(!(new File("plugins/" + pdfFile.getName()).exists()))
-			new File("plugins/" + pdfFile.getName()).mkdir();
+		log = getLogger();
 		
-		configFile = new File("plugins/" + pdfFile.getName() + "/config.yml");
-		config = new YamlConfiguration();
-		
-		if(!configFile.exists()){
-	        configFile.getParentFile().mkdirs();
-	        copy(getResource("config.yml"), configFile);
+		File configFile = new File(getDataFolder(), "config.yml");
+	    if (!configFile.exists()) {
+	        saveDefaultConfig();
 	    }
 		
-		try {
-			config.load(configFile);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (getConfig().getBoolean("save")) {
+	        File saveFile = new File(getDataFolder(), "freezedPlayers.txt");
+	        if (saveFile.exists()) {
+	            try {
+	                InputStream ips = new FileInputStream(saveFile);
+	                InputStreamReader ipsr = new InputStreamReader(ips);
+	                BufferedReader br = new BufferedReader(ipsr);
+	                String line = null;
+	                while((line = br.readLine()) != null) {
+	                    toFreeze.add(line.trim());
+	                }
+	            } catch (Exception exc) {
+	                log.log(Level.SEVERE, "Error while loading freezedPlayers.txt ", exc);
+	            }
+	        }
+	        
+	        saveFile = new File(getDataFolder(), "freezedTmpPlayers.txt");
+	        if (saveFile.exists()) {
+	            try {
+	                InputStream ips = new FileInputStream(saveFile);
+	                InputStreamReader ipsr = new InputStreamReader(ips);
+	                BufferedReader br = new BufferedReader(ipsr);
+	                String line = null;
+	                while((line = br.readLine()) != null) {
+	                	Pattern p = Pattern.compile("(.*):(.*);");
+	    				Matcher m = p.matcher(line);
+	    				while(m.find())
+	    				{
+	    					String array[] = {m.group(1).trim(), m.group(2).trim()};
+	    					final String playerName = m.group(1).trim();
+	    					final long time = Long.parseLong(m.group(2).trim());
+	    					final int IDListArray = toTmpFreeze.size();
+	    					if(Bukkit.getOfflinePlayer(playerName) != null)
+	    					{
+		    					toTmpFreeze.add(IDListArray, array);
+		    					Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+		    						@Override
+		    						public void run() {
+		    							OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
+		    							if(player != null)
+		    							{
+			    							unfreeze(player);
+			    							toTmpFreeze.remove(IDListArray);
+			    							if(player.isOnline() && getConfig().getBoolean("message"))
+				    							Bukkit.getPlayer(player.getName()).sendMessage("You are now unfreezed after " + time + " seconds.");	
+			    							log.info(player.getName() + " unfreezed after " + time + " seconds.");
+		    							}
+		    						}
+		    					}, time * 20);
+		    					if(!toFreeze.contains(playerName))
+		    						toFreeze.add(playerName);
+	    					}
+	    				}
+	                }
+	            } catch (Exception exc) {
+	                log.log(Level.SEVERE, "Error while loading freezedTmpPlayers.txt ", exc);
+	            }
+	        }
 		}
 		
-		if(config.getBoolean("save"))
-		{
-			File saveFile = new File("plugins/" + pdfFile.getName() + "/freezedPlayers.txt");
-			if(saveFile.exists())
-			{
-				try {
-					InputStream ips = new FileInputStream(saveFile);
-					InputStreamReader ipsr = new InputStreamReader(ips);
-					BufferedReader br = new BufferedReader(ipsr);
-					
-					String line = null;
-					
-					while((line = br.readLine()) != null)
-					{
-						toFreeze.add(line.trim());
-					}
-				} catch (Exception e) {
-					System.out.println("Error : " + e.toString());
-				}
-			}
-		}
-		
-		log.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " enabled.");
-		PluginManager pm = getServer().getPluginManager();
+		PluginManager pm = Bukkit.getPluginManager();
 
-        pm.registerEvents(playerListener, this);
+		FreezeCommands.register(this);
+        pm.registerEvents(new FreezeListener(this), this);
+        log.info("Enabled.");
 	}
 	
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		Player player = null;
-		if (sender instanceof Player) {
-			player = (Player) sender;
-		}
-	 
-		if (command.getName().equalsIgnoreCase("freeze") && (player.isOp() || player.hasPermission("freeze.freeze"))){
-			if(args.length > 0)
-			{
-				for (String i : args)
-				{
-					for(Player p : Bukkit.getOnlinePlayers())
-					{
-						if(p.getName().toLowerCase().contains(i.toLowerCase()) || p.getName().equalsIgnoreCase(i))
-						{
-							if(toFreeze.size() == 0 || !toFreeze.contains(p.getName()))
-							{
-								toFreeze.add(p.getName());
-								player.sendMessage(p.getName() + " freezed.");
-							}
-							else if(toFreeze.size() > 0 && toFreeze.contains(p.getName()))
-							{
-								toFreeze.remove(p.getName());
-								player.sendMessage(p.getName() + " unfreezed.");
-							}
-						}
-					}
-				}
-				return true;
-			}
-			else
-				player.sendMessage("Usage : /freeze <player name>"); return false;
-		}
-		
-		if (command.getName().equalsIgnoreCase("tmpfreeze") && (player.isOp() || player.hasPermission("freeze.tmpfreeze"))) {
-			if(args.length > 1)
-			{
-				for(final Player p : Bukkit.getOnlinePlayers())
-				{
-					if(p.getName().toLowerCase().contains(args[0].toLowerCase()) || p.getName().equalsIgnoreCase(args[0]))
-					{
-						if(Integer.parseInt(args[1]) > 0)
-						{
-							if(toFreeze.size() == 0 || !toFreeze.contains(p.getName()))
-							{
-								p.sendMessage("You are now freezed for " + Integer.parseInt(args[1]) + " seconds.");
-								player.sendMessage("You have freeze " + p.getName() + " for " + Integer.parseInt(args[1]) + " seconds.");
-								toFreeze.add(p.getName());
-								toTmpFreeze.add(p.getName());
-								Timer timer = new Timer();
-							    timer.schedule (new TimerTask() {
-							            public void run()
-							            {
-							                toFreeze.remove(p.getName());
-							                toTmpFreeze.remove(p.getName());
-							                this.cancel();
-							                p.sendMessage("You are now unfreezed after " + scheduledExecutionTime() / 1000 + " seconds.");
-							            }
-							    }, ((Integer.parseInt(args[1])) * 1000));
-							}
-						}
-					}
-				}
-				return true;
-			}
-			else
-				return false;
-		}
-		
-		if(command.getName().equalsIgnoreCase("freezeall"))
-		{
-			if(player.isOp() || player.hasPermission("freeze.freezeall"))
-			{
-				if(freezeAll)
-				{
-					freezeAll = false;
-					player.sendMessage("All players are now unfreezed.");
-				}
-				else
-				{
-					freezeAll = true;
-					player.sendMessage("All players are now freezed.");
-				}
-			}
-			return true;
-		}
-		
-		if(command.getName().equalsIgnoreCase("unfreezeall"))
-		{
-			if(player.isOp() || player.hasPermission("freeze.unfreezeall"))
-			{
-				freezeAll = false;
-				toFreeze.clear();
-				player.sendMessage("All players are now unfreezed.");
-			}
-			return true;
-		}
-		
-		return false;
+	public void reloadPlugin()
+	{
+		setEnabled(false);
+		setEnabled(true);
+	}
+	
+	public boolean canBeFrozen(Player player) {
+		return !player.hasPermission("freeze.never");
 	}
 
+	public boolean isFrozen(Player player) {
+		if (player == null) {
+			return false;
+		}
+	
+		if (freezeAll.contains(player.getWorld().getName())) {
+			return canBeFrozen(player);
+		}
+
+		return toFreeze.contains(player.getName());
+	}
+	
+	public int isTmpFrozen(Player player) {
+		if (player == null)
+			return -1;
+		
+		for(String[] string : toTmpFreeze) {
+			if(player.getName().equalsIgnoreCase(string[0]))
+				return Integer.parseInt(string[1]);
+		}
+		
+		return 0;
+	}
+
+	public boolean getFreezeAll(World world) {
+		return freezeAll.contains(world.getName());
+	}
+
+	public boolean toggleFreezeAll(World world) {
+		if(freezeAll.contains(world.getName())) {
+			freezeAll.remove(world.getName());
+			return false;
+		} else {
+			freezeAll.add(world.getName());
+			return true;
+		}
+	}
+	
+	public boolean toggleFreezeAll() {
+		
+		if(freezeAll.size() == Bukkit.getWorlds().size()) {
+			freezeAll.clear();
+			return false;
+		}
+		
+		for(World w : Bukkit.getWorlds())
+		{
+			if(!freezeAll.contains(w.getName()))
+			{
+				freezeAll.add(w.getName());
+			}
+		}
+		
+		return true;
+	}
+
+	public boolean toggleFreeze(Player player) {
+		if(toFreeze.contains(player.getName())) {
+			toFreeze.remove(player.getName());
+			return false;
+		} else {
+			toFreeze.add(player.getName());
+			return true;
+		}		
+	}
+	
+	public void unfreeze(Player player) {
+		if(toFreeze.contains(player.getName()))
+			toFreeze.remove(player.getName());
+		if(toTmpFreeze.contains(player.getName()))
+			toTmpFreeze.remove(player.getName());
+	}
+	
+	public void unfreeze(OfflinePlayer player) {
+		if(toFreeze.contains(player.getName()))
+			toFreeze.remove(player.getName());
+		if(toTmpFreeze.contains(player.getName()))
+			toTmpFreeze.remove(player.getName());
+	}
+
+	public void unfreezeAll() {
+		freezeAll.clear();
+		toFreeze.clear();
+		toTmpFreeze.clear();
+		Bukkit.getScheduler().cancelTasks(this);
+	}
+
+	public boolean temporarilyFreeze(final Player player, final int seconds) {
+		if(!toFreeze.contains(player.getName()) && !toTmpFreeze.contains(player.getName()))	{
+			toFreeze.add(player.getName());
+			String[] array = {player.getName(), String.valueOf(seconds)};
+			final int IDListArray = toTmpFreeze.size();
+			toTmpFreeze.add(IDListArray, array);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+					@Override
+					public void run() {
+						unfreeze(player);
+						toTmpFreeze.remove(IDListArray);
+						if(getConfig().getBoolean("message"))
+							player.sendMessage("You are now unfreezed after " + seconds + " seconds.");
+						log.info(player.getName() + " unfreezed after " + seconds + " seconds.");
+					}
+			}, seconds * 20);
+			return true;
+		} 
+		else 
+			return false;
+	}
+	
 	public void onDisable(){
 		
-		if(config.getBoolean("save"))
+		if(getConfig().getBoolean("save"))
 		{
-			File saveFile = new File("plugins/" + pdfFile.getName() + "/freezedPlayers.txt");
+			File saveFile = new File(getDataFolder(), "freezedPlayers.txt");
 			if(saveFile.exists())
 				saveFile.delete();
-			
+
 			try {
 				BufferedWriter out = new BufferedWriter(new FileWriter(saveFile));
-					
+
 				for(String freezedPlayer : toFreeze)
 				{
 					if(!toTmpFreeze.contains(freezedPlayer))
@@ -205,32 +245,29 @@ public class Freeze extends JavaPlugin {
 				
 				out.close();
 			} catch (Exception e) {
-				System.out.println("Error : " + e.toString());
+				log.log(Level.SEVERE, "Error while saving freezedPlayers.txt ", e);
+			}
+			
+			saveFile = new File(getDataFolder(), "freezedTmpPlayers.txt");
+			if(saveFile.exists())
+				saveFile.delete();
+
+			try {
+				BufferedWriter out = new BufferedWriter(new FileWriter(saveFile));
+
+				for(String[] array : toTmpFreeze)
+				{
+					out.write(array[0] + ":" + array[1] + ";\n");
+				}
+				
+				out.close();
+			} catch (Exception e) {
+				log.log(Level.SEVERE, "Error while saving freezedTmpPlayers.txt ", e);
 			}
 		}
 		
-		/*try {
-			config.save(configFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		
-		log.info(pdfFile.getName() + " disabled.");
-	}
-	
-	private void copy(InputStream in, File file) {
-	    try {
-	        OutputStream out = new FileOutputStream(file);
-	        byte[] buf = new byte[1024];
-	        int len;
-	        while((len=in.read(buf))>0){
-	            out.write(buf,0,len);
-	        }
-	        out.close();
-	        in.close();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+		
+		log.info("Disabled.");
 	}
 }
