@@ -1,5 +1,6 @@
 package me.aurel2108.freeze;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -74,7 +76,7 @@ public class FreezeListener implements Listener {
 	@EventHandler
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
 	{
-		if(event.isCancelled() == false && event.getPlayer() != null && plugin.getConfig().getBoolean("commands") == false)
+		if(event.isCancelled() == false && event.getPlayer() != null && plugin.isFrozen(event.getPlayer()) && plugin.getConfig().getBoolean("commands") == false)
 			event.setCancelled(true);
 	}
 	
@@ -88,6 +90,19 @@ public class FreezeListener implements Listener {
 			{
 				event.setDamage(0);
 				event.setCancelled(true);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event)
+	{
+		if(plugin.getConfig().getBoolean("alertupdate") && event.getPlayer() != null && (event.getPlayer().isOp() || event.getPlayer().hasPermission("freeze.checkupdate")))
+		{
+			if(!plugin.update.isEmpty())
+			{
+				event.getPlayer().sendMessage(ChatColor.RED + "[Freeze] A new update (" + plugin.update + ") is available.");
+				event.getPlayer().sendMessage(ChatColor.RED + "[Freeze] For more informations, go to the BukkitDev page : http://dev.bukkit.org/server-mods/freeze");
 			}
 		}
 	}

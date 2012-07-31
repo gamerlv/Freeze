@@ -20,6 +20,7 @@ public class FreezeCommands {
 		plugin.getCommand("unfreezeall").setExecutor(new UnfreezeAllCommand(plugin));
 		plugin.getCommand("rldfreeze").setExecutor(new RldFreezeCommand(plugin));
 		plugin.getCommand("freezelist").setExecutor(new FreezeListCommand(plugin));
+		plugin.getCommand("freezecheck").setExecutor(new CheckUpdateFreezeCommand(plugin));
 	}
 	
 	private static class FreezeCommand implements CommandExecutor {
@@ -50,28 +51,28 @@ public class FreezeCommands {
 							if (plugin.toggleFreeze(p))
 							{
 								if(plugin.getConfig().getBoolean("message"))
-									p.sendMessage("You are now freezed.");
+									p.sendMessage("You are now frozen.");
 								
 								if(sender instanceof Player)
 								{
-									player.sendMessage(p.getName() + " freezed.");
-									plugin.log.info(p.getName() + " freezed by " + player.getName());
+									player.sendMessage(p.getName() + " frozen.");
+									plugin.log.info(p.getName() + " frozen by " + player.getName());
 								}
 								else
-									plugin.log.info(p.getName() + " freezed by Console");
+									plugin.log.info(p.getName() + " frozen by Console");
 							}
 							else
 							{
 								if(plugin.getConfig().getBoolean("message"))
-									p.sendMessage("You are now unfreezed.");
+									p.sendMessage("You are now unfrozen.");
 								
 								if(sender instanceof Player)
 								{
-									player.sendMessage(p.getName() + " unfreezed.");
-									plugin.log.info(p.getName() + " unfreezed by " + player.getName());
+									player.sendMessage(p.getName() + " unfrozen.");
+									plugin.log.info(p.getName() + " unfrozen by " + player.getName());
 								}
 								else
-									plugin.log.info(p.getName() + " unfreezed by Console");
+									plugin.log.info(p.getName() + " unfrozen by Console");
 							}
 						}
 					}
@@ -141,14 +142,14 @@ public class FreezeCommands {
 				{
 					if(plugin.temporarilyFreeze(p, seconds)) {
 						if(plugin.getConfig().getBoolean("message"))
-							p.sendMessage("You are now freezed for " + seconds + " seconds.");
+							p.sendMessage("You are now frozen for " + seconds + " seconds.");
 						if(sender instanceof Player)
 						{
-							player.sendMessage(p.getName() + " freezed for " + seconds + " seconds.");
-							plugin.log.info(p.getName() + " freezed by " + player.getName() + " for " +  seconds + " seconds.");
+							player.sendMessage(p.getName() + " frozen for " + seconds + " seconds.");
+							plugin.log.info(p.getName() + " frozen by " + player.getName() + " for " +  seconds + " seconds.");
 						}
 						else
-							plugin.log.info(p.getName() + " freezed by Console for " + seconds + " seconds.");
+							plugin.log.info(p.getName() + " frozen by Console for " + seconds + " seconds.");
 					}
 				}
 			}
@@ -175,28 +176,28 @@ public class FreezeCommands {
 				if(plugin.toggleFreezeAll())
 				{
 					if(plugin.getConfig().getBoolean("message"))
-						Bukkit.broadcastMessage("All players are now freezed.");
+						Bukkit.broadcastMessage("All players are now frozen.");
 					
 					if(sender instanceof Player)
 					{
-						player.sendMessage("All players are now freezed.");
-						plugin.log.info("All players freezed by " + player.getName());
+						player.sendMessage("All players are now frozen.");
+						plugin.log.info("All players frozen by " + player.getName());
 					}
 					else
-						plugin.log.info("All players freezed by Console");
+						plugin.log.info("All players frozen by Console");
 				}
 				else
 				{
 					if(plugin.getConfig().getBoolean("message"))
-						Bukkit.broadcastMessage("All players are now unfreezed.");
+						Bukkit.broadcastMessage("All players are now unfrozen.");
 					
 					if(sender instanceof Player)
 					{
-						player.sendMessage("All players are now unfreezed.");
-						plugin.log.info("All players unfreezed by " + player.getName());
+						player.sendMessage("All players are now unfrozen.");
+						plugin.log.info("All players unfrozen by " + player.getName());
 					}
 					else
-						plugin.log.info("All players unfreezed by Console");
+						plugin.log.info("All players unfrozen by Console");
 				}
 			}
 			else
@@ -208,28 +209,28 @@ public class FreezeCommands {
 						if(plugin.toggleFreezeAll(Bukkit.getWorld(arg)))
 						{
 							if(plugin.getConfig().getBoolean("message"))
-								Bukkit.broadcastMessage("All players in " + arg + " are now freezed.");
+								Bukkit.broadcastMessage("All players in " + arg + " are now frozen.");
 							
 							if(sender instanceof Player)
 							{
-								player.sendMessage("All players in " + arg + " are now freezed.");
-								plugin.log.info("All players in " + arg + " freezed by " + player.getName());
+								player.sendMessage("All players in " + arg + " are now frozen.");
+								plugin.log.info("All players in " + arg + " frozen by " + player.getName());
 							}
 							else
-								plugin.log.info("All players in " + arg + " freezed by Console");
+								plugin.log.info("All players in " + arg + " frozen by Console");
 						}
 						else
 						{
 							if(plugin.getConfig().getBoolean("message"))
-								Bukkit.broadcastMessage("All players in " + arg + " are now unfreezed.");
+								Bukkit.broadcastMessage("All players in " + arg + " are now unfrozen.");
 							
 							if(sender instanceof Player)
 							{
-								player.sendMessage("All players in " + arg + " are now unfreezed.");
-								plugin.log.info("All players in " + arg + " unfreezed by " + player.getName());
+								player.sendMessage("All players in " + arg + " are now unfrozen.");
+								plugin.log.info("All players in " + arg + " unfrozen by " + player.getName());
 							}
 							else
-								plugin.log.info("All players in " + arg + " unfreezed by Console");
+								plugin.log.info("All players in " + arg + " unfrozen by Console");
 						}
 					}
 				}
@@ -256,15 +257,15 @@ public class FreezeCommands {
 			plugin.unfreezeAll();
 			
 			if(plugin.getConfig().getBoolean("message"))
-				Bukkit.broadcastMessage("All players are now unfreezed.");
+				Bukkit.broadcastMessage("All players are now unfrozen.");
 			
 			if(sender instanceof Player)
 			{
-				player.sendMessage("All players are now unfreezed.");
-				plugin.log.info("All players unfreezed by " + player.getName());
+				player.sendMessage("All players are now unfrozen.");
+				plugin.log.info("All players unfrozen by " + player.getName());
 			}
 			else
-				plugin.log.info("All players unfreezed by Console");
+				plugin.log.info("All players unfrozen by Console");
 			
 			return true;
 		}
@@ -310,49 +311,89 @@ public class FreezeCommands {
 			if(sender instanceof Player)
 				player = (Player)sender;
 			
-			String freezedList = "";
-			String tmpFreezedList = "";
+			String frozenList = "";
+			String tmpfrozenList = "";
 			for(Player p : Bukkit.getOnlinePlayers())
 			{
 				if(plugin.isFrozen(p)) {
-					if(freezedList.length() > 0)
-						freezedList = freezedList + ", " + p.getName();
+					if(frozenList.length() > 0)
+						frozenList = frozenList + ", " + p.getName();
 					else
-						freezedList = p.getName();
+						frozenList = p.getName();
 				}
 				
 				if(plugin.isTmpFrozen(p) > 0) {
-					if(tmpFreezedList.length() > 0)
-						tmpFreezedList = tmpFreezedList + ", " + p.getName() + " for " + plugin.isTmpFrozen(p) + " seconds";
+					if(tmpfrozenList.length() > 0)
+						tmpfrozenList = tmpfrozenList + ", " + p.getName() + " for " + plugin.isTmpFrozen(p) + " seconds";
 					else
-						tmpFreezedList = p.getName() + " for " + plugin.isTmpFrozen(p) + " seconds";	
+						tmpfrozenList = p.getName() + " for " + plugin.isTmpFrozen(p) + " seconds";	
 				}
 			}
 			
 			if(sender instanceof Player) {
-				if(freezedList.length() > 0)
-					player.sendMessage("Freezed players : " + freezedList);
+				if(frozenList.length() > 0)
+					player.sendMessage("frozen players : " + frozenList);
 				else
-					player.sendMessage("There is no freezed players.");
+					player.sendMessage("There is no frozen players.");
 				
-				if(tmpFreezedList.length() > 0)
-					player.sendMessage("Temporarily freezed players :" + tmpFreezedList);
+				if(tmpfrozenList.length() > 0)
+					player.sendMessage("Temporarily frozen players :" + tmpfrozenList);
 				else
-					player.sendMessage("There is no temporarily freezed players.");
+					player.sendMessage("There is no temporarily frozen players.");
 			}
 			else
 			{
-				if(freezedList.length() > 0)
-					plugin.log.info("Freezed players : " + freezedList);
+				if(frozenList.length() > 0)
+					plugin.log.info("frozen players : " + frozenList);
 				else
-					plugin.log.info("There is no freezed players.");
+					plugin.log.info("There is no frozen players.");
 				
-				if(tmpFreezedList.length() > 0)
-					plugin.log.info("Temporarily freezed players : " + tmpFreezedList);
+				if(tmpfrozenList.length() > 0)
+					plugin.log.info("Temporarily frozen players : " + tmpfrozenList);
 				else
-					plugin.log.info("There is no temporarily freezed players.");
+					plugin.log.info("There is no temporarily frozen players.");
 			}
 				
+			
+			return true;
+		}
+	}
+	
+	public static class CheckUpdateFreezeCommand implements CommandExecutor {
+		
+		private final Freeze plugin;
+		
+		public CheckUpdateFreezeCommand(Freeze plugin) {
+			this.plugin = plugin;
+		}
+		
+		public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+		{
+			Player player = null;
+			if(sender instanceof Player)
+				player = (Player)sender;
+			
+			if(plugin.update.isEmpty())
+			{
+				if(sender instanceof Player)
+					player.sendMessage("There is no new update for Freeze.");
+				else
+					plugin.log.info("There is no new update.");
+			}
+			else
+			{
+				
+				if(sender instanceof Player)
+				{
+					player.sendMessage("[Freeze] New version : " + plugin.update);
+					player.sendMessage("[Freeze] Check http://dev.bukkit.org/server-mods/freeze for more informations and for download it...");
+				}
+				else
+				{
+					plugin.log.info("New version : " + plugin.update);
+					plugin.log.info("Check http://dev.bukkit.org/server-mods/freeze for more informations and for download it.");
+				}
+			}
 			
 			return true;
 		}

@@ -1,5 +1,5 @@
 name: Freeze
-version: 1.4.0
+version: 1.4.1
 description: Freeze players.
 author: aurel2108
 website: http://aurel2108.eu
@@ -7,15 +7,15 @@ main: me.aurel2108.freeze.Freeze
 commands:
  freeze:
   description: Freeze or unfreeze a player.
-  usage: Correct usage is /freeze <player name>
+  usage: Correct usage is /freeze <player name> [players...] [reason]
   permission: freeze.freeze
  tmpfreeze:
   description: Temporarily freeze a player.
-  usage: Correct usage is /tmpfreeze <player name> <seconds>
+  usage: Correct usage is /tmpfreeze <player name> <seconds> [reason]
   permission: freeze.tmpfreeze
  freezeall:
   description: Freeze or unfreeze every players.
-  usage: Correct usage is /freezeall [world]
+  usage: Correct usage is /freezeall [world] [reason] ([world] can be "all" for freeze all worlds)
   permission: freeze.freezeall
  unfreezeall:
   description: Unfreeze every players.
@@ -29,6 +29,10 @@ commands:
   description: List all the freezed or tmpfreezed players.
   usage: Correct usage is /freezelist
   permission: freeze.list
+ freezecheck:
+  description: Update the plugin.
+  usage: Correct usage is /freezecheck
+  permission: freeze.checkupdate
 permissions:
  freeze.*:
   description: Be able to use all commands.
@@ -39,6 +43,7 @@ permissions:
     freeze.tmpfreeze: true
     freeze.reload: true
     freeze.list: true
+    freeze.checkupdate: true
  freeze.freeze:
   description: Be able to freeze players.
   default: op
@@ -59,4 +64,7 @@ permissions:
   default: op
  freeze.list:
   description: Be able to list every freezed or tmpfreezed players.
+  default: op
+ freeze.checkupdate:
+  description: Be able to see when a new update for the plugin is available
   default: op

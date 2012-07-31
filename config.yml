@@ -12,8 +12,13 @@
 #
 # If you let damage to true, freezed players can take damages like any player
 # But if you set it to false, freezed players will not take any damage
+#
+# If you let autoupdate to true, when your server start, the plugin will update automatically if it detects an update
+#
+# If you let alertupdate to true, when an op player or a player who have the freeze.alertupdate node connects, he will see a message informing of a new update
 commands: true
 speak: true
 save: true
 message: false
 damage: false
+alertupdate: true

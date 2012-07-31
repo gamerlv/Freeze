@@ -6,7 +6,7 @@ I hope you'll enjoy it !
 
 (This command can be also found in the plugin AdminCmd. Thanks for the idea.)
 
-Last version : 1.4.0
+Last version : 1.4.1
 
 == COMMANDS ==
 
@@ -35,11 +35,15 @@ Reload the plugin and it's config.
 
 List all freezed players and temporarily freezed players.
 
+/freezecheck
+
+Check if there is a new update.
+
 == PERMISSIONS ==
 
 freeze.*
 
-Give permissions for /freeze, /freezeall, /unfreezeall, /freezelist and /rldfreeze.
+Give permissions for /freeze, /freezeall, /unfreezeall, /freezelist, /freezecheck and /rldfreeze.
 
 freeze.freeze
 
@@ -68,6 +72,11 @@ Be able to use /freezelist command. Default enabled for ops.
 freeze.never
 
 Never be freezed by anyone. Default enabled for ops.
+
+freeze.checkupdate
+
+Be able to use /freezecheck command and receive a message when joining the server if there is a new update for the plugin and if alertupdate option is activated.
+Default enabled for ops.
 
 == TWITTER ==
 
@@ -103,6 +112,14 @@ Lots of changes in code. (Thanks a lot to aumgn for his help !)
 Add /rldfreeze command and world argument in /freezeall command.
 Add /freezelist command.
 Add message option.
-Seconds arguments for /tmpfreeze can now be seconds or "like-Essentials" time format (3d4h5m3s for 3 days 4 hours 5 minutes and 3 seconds)
+<time> argument for /tmpfreeze can now be seconds or "like-Essentials" time format (3d4h5m3s for 3 days 4 hours 5 minutes and 3 seconds)
 Temporarily freeze time is also save with freezed players when the server reboot or is reloaded. (when save option is enabled)
 Bug fixed when you give freeze.tmpfreeze node without freeze.freeze node.
+
+1.4.1
+
+Add /freezecheck command.
+The plugin automatically check if there is a new update and send a message in the console (or to ops or players who have freeze.checkupdate permission if alertupdate option is set to true).
+Add freeze.checkupdate permission and alertupdate option.
+Fix command option bug.
+Spelling corrections.
