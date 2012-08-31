@@ -1,6 +1,7 @@
 package me.aurel2108.freeze;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,7 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -26,8 +27,20 @@ public class FreezeListener implements Listener {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event)
 	{
-		if(plugin.isFrozen(event.getPlayer()))
-			event.setTo(event.getFrom());
+		if(plugin.isFrozen(event.getPlayer())) {
+			
+			if(!plugin.getConfig().getBoolean("lookaround"))
+				event.setTo(event.getFrom());
+			else {
+				if(event.getFrom().getX() != event.getTo().getX() || event.getFrom().getY() != event.getTo().getY() || event.getFrom().getZ() != event.getTo().getZ())
+				{
+					Location loc = event.getFrom();
+					loc.setPitch(event.getTo().getPitch());
+					loc.setYaw(event.getTo().getYaw());
+					event.getPlayer().teleport(loc);
+				}
+			}
+		}
 	}
 	
 	@EventHandler
@@ -61,12 +74,24 @@ public class FreezeListener implements Listener {
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event)
 	{
-		if(plugin.isFrozen(event.getPlayer()))
-			event.setTo(event.getFrom());
+		if(plugin.isFrozen(event.getPlayer())) {
+			
+			if(!plugin.getConfig().getBoolean("lookaround"))
+				event.setTo(event.getFrom());
+			else {
+				if(event.getFrom().getX() != event.getTo().getX() || event.getFrom().getY() != event.getTo().getY() || event.getFrom().getZ() != event.getTo().getZ())
+				{
+					Location loc = event.getFrom();
+					loc.setPitch(event.getTo().getPitch());
+					loc.setYaw(event.getTo().getYaw());
+					event.getPlayer().teleport(loc);
+				}
+			}
+		}
 	}
 	
 	@EventHandler
-	public void onPlayerChat(PlayerChatEvent event)
+	public void onPlayerChat(AsyncPlayerChatEvent event)
 	{
 		if(event.isCancelled() == false && event.getPlayer() != null && event.getMessage().startsWith("/") == false && plugin.getConfig().getBoolean("speak") == false && plugin.isFrozen(event.getPlayer()))
 			event.setCancelled(true);

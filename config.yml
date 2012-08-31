@@ -16,9 +16,12 @@
 # If you let autoupdate to true, when your server start, the plugin will update automatically if it detects an update
 #
 # If you let alertupdate to true, when an op player or a player who have the freeze.alertupdate node connects, he will see a message informing of a new update
+#
+# If you let lookaround to false, players will not see around them, but if you set it to true, they will.
 commands: true
 speak: true
 save: true
 message: false
 damage: false
 alertupdate: true
+lookaround: false
