@@ -1,4 +1,4 @@
-== ABOUT ==
+## ABOUT ##
 
 Freeze is a plugin those just prevent one or more player to move. It can be useful sometimes so I've decided to share it.
 
@@ -6,9 +6,9 @@ I hope you'll enjoy it !
 
 (This command can be also found in the plugin AdminCmd. Thanks for the idea.)
 
-Last version : 1.4.2.1
+Last version : '''1.4.2.1'''
 
-== COMMANDS ==
+## COMMANDS ##
 
 /freeze <player>
 
@@ -39,7 +39,7 @@ List all freezed players and temporarily freezed players.
 
 Check if there is a new update.
 
-== PERMISSIONS ==
+## PERMISSIONS ##
 
 freeze.*
 
@@ -78,16 +78,16 @@ freeze.checkupdate
 Be able to use /freezecheck command and receive a message when joining the server if there is a new update for the plugin and if alertupdate option is activated.
 Default enabled for ops.
 
-== TWITTER ==
+## TWITTER ##
 
 You can follow the twitter account of the plugin for see all news about the development (in real time) and more : @FreezeBukkit.
 
-== COMPILE ==
+## COMPILE ##
 
 To compile this plugin your self it is easiest with maven2. You will need to have this install.
 When you have this, you only need to run ""mvn clean package"" from any command prompt or terminal.
 
-== CHANGELOG ==
+## CHANGELOG ##
 
 1.0.0
 
